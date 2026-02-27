@@ -1508,6 +1508,7 @@
 
     .proj-item {
       border-bottom: 1px solid var(--border);
+      position: relative;
     }
 
     .proj-item:last-child {
@@ -1521,6 +1522,8 @@
       cursor: pointer;
       transition: background .2s;
       gap: 24px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .proj-header:hover {
@@ -1671,8 +1674,10 @@
 
     .proj-preview-img {
       width: 100%;
-      height: 220px;
+      height: auto;
+      max-height: 280px;
       object-fit: cover;
+      object-position: top center;
       display: block;
     }
 
@@ -1892,44 +1897,54 @@
       align-items: center;
       justify-content: center;
       padding: 40px;
-      overflow: hidden;
+      overflow-y: auto;
     }
 
     .carousel-container {
       position: relative;
       width: 100%;
-      height: 100%;
-      max-height: 480px;
+      height: auto;
+      max-height: 80vh;
       border-radius: 14px;
-      overflow: hidden;
       cursor: pointer;
+      display: flex;
+      align-items: center;
     }
 
     .carousel-slide {
       position: absolute;
       inset: 0;
       opacity: 0;
+      visibility: hidden;
       transform: perspective(1200px) rotateY(25deg) scale(0.85) translateX(60px);
       filter: blur(4px) brightness(0.5);
-      transition: opacity 0.8s cubic-bezier(.4, 0, .2, 1), transform 0.8s cubic-bezier(.16, 1, .3, 1), filter 0.8s ease;
+      transition: opacity 0.8s cubic-bezier(.4, 0, .2, 1), transform 0.8s cubic-bezier(.16, 1, .3, 1), filter 0.8s ease, visibility 0.8s;
     }
 
     .carousel-slide.active {
+      position: relative;
+      inset: auto;
+      visibility: visible;
       opacity: 1;
       transform: perspective(1200px) rotateY(0deg) scale(1) translateX(0);
       filter: blur(0px) brightness(1);
     }
 
     .carousel-slide.prev {
+      position: absolute;
+      inset: 0;
       opacity: 0;
+      visibility: hidden;
       transform: perspective(1200px) rotateY(-25deg) scale(0.85) translateX(-60px);
       filter: blur(4px) brightness(0.5);
     }
 
     .carousel-slide img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.06);
       transition: transform 0.4s cubic-bezier(.4, 0, .2, 1), box-shadow 0.4s ease;
@@ -2055,7 +2070,7 @@
       flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      grid-auto-rows: 1fr;
+      grid-auto-rows: min-content;
       row-gap: 32px;
       column-gap: 24px;
       padding: 40px;
@@ -2076,15 +2091,14 @@
       border-radius: 12px;
       overflow: hidden;
       cursor: pointer;
-      aspect-ratio: 16/10;
-      height: 100%;
-      min-height: 200px;
+      height: auto;
     }
 
     .gallery-item img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      display: block;
+      object-fit: contain;
       transition: transform 0.45s cubic-bezier(.4, 0, .2, 1), filter 0.45s ease;
     }
 
@@ -3364,8 +3378,8 @@
         <div class="proj-header">
           <span class="proj-num">01</span>
           <div class="proj-info">
-            <div class="proj-name">E-Commerce Platform</div>
-            <div class="proj-brief">Full-stack shopping experience with cart, payments &amp; admin dashboard</div>
+            <div class="proj-name">Nibble</div>
+            <div class="proj-brief">Multi-sided food delivery platform with separate dashboards</div>
           </div>
           <span class="proj-toggle">→</span>
         </div>
@@ -3374,8 +3388,8 @@
         <div class="proj-header">
           <span class="proj-num">02</span>
           <div class="proj-info">
-            <div class="proj-name">Task Management SaaS</div>
-            <div class="proj-brief">Collaborative project manager with real-time updates and team workspaces</div>
+            <div class="proj-name">DJ Marketplace</div>
+            <div class="proj-brief">Platform for discovering and booking professional DJs</div>
           </div>
           <span class="proj-toggle">→</span>
         </div>
@@ -3384,18 +3398,8 @@
         <div class="proj-header">
           <span class="proj-num">03</span>
           <div class="proj-info">
-            <div class="proj-name">Social Media Platform</div>
-            <div class="proj-brief">Feed, follow system, posts, likes, comments — full social graph</div>
-          </div>
-          <span class="proj-toggle">→</span>
-        </div>
-      </div>
-      <div class="proj-item" data-project="3">
-        <div class="proj-header">
-          <span class="proj-num">04</span>
-          <div class="proj-info">
-            <div class="proj-name">Auth System (JWT + OTP)</div>
-            <div class="proj-brief">Secure, production-grade authentication with multi-factor support</div>
+            <div class="proj-name">xManager</div>
+            <div class="proj-brief">Professional sports and player management application</div>
           </div>
           <span class="proj-toggle">→</span>
         </div>
@@ -4126,68 +4130,129 @@
     (function () {
       const projectsData = [
         {
-          title: 'E-Commerce Platform',
-          brief: 'Full-stack shopping experience with cart, payments & admin dashboard',
-          description: 'Client needed a full e-commerce system from scratch — product catalog, cart, checkout, and order management. Built a complete MERN stack solution with Stripe integration and an admin dashboard for inventory management. Features include real-time inventory tracking, order status updates, email notifications, and a responsive storefront optimized for mobile.',
-          tech: ['React', 'Node.js', 'MongoDB', 'Stripe API', 'JWT', 'Tailwind CSS'],
-          outcome: 'Deployed and live within 3 weeks. Handles product management, order tracking, and secure payments. Client managing inventory independently via admin panel. Processing 200+ orders weekly with zero downtime.',
-          preview: 'https://picsum.photos/seed/ecommerce-shop/800/500',
+          title: 'Nibble',
+          brief: 'Multi-sided food delivery platform with separate dashboards',
+          description: 'A comprehensive food delivery and marketplace platform featuring three distinct interfaces: an Explore marketplace for users to order food, a Restaurant Dashboard to manage menus and monitor orders, and a Rider Dashboard for delivery personnel. Built with a focus on real-time order tracking and smooth user experiences across all roles.',
+          tech: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+          outcome: 'Successfully implemented complex role-based routing, real-time status updates, and a responsive design that works seamlessly for users, partners, and riders.',
+          preview: 'Nibble-ui screenshots/screencapture-localhost-5173-2026-02-22-16_02_46.png',
           screenshots: [
-            'https://picsum.photos/seed/ecom-dash/800/500',
-            'https://picsum.photos/seed/ecom-cart/800/500',
-            'https://picsum.photos/seed/ecom-products/800/500',
-            'https://picsum.photos/seed/ecom-checkout/800/500'
+            'Nibble-ui screenshots/screencapture-localhost-5173-2026-02-22-16_02_46.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-nomnom-2026-02-23-01_27_47.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-2026-02-23-01_24_21.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-about-2026-02-23-01_24_42.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-checkout-2026-02-23-01_30_42.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-contact-2026-02-23-01_26_04.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-explore-2026-02-22-16_03_18.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-explore-2026-02-23-01_29_46.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-how-it-works-2026-02-23-01_25_00.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-login-2026-02-23-01_28_04.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-partner-login-2026-02-23-01_28_31.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-partner-signup-2026-02-23-01_28_45.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-partners-2026-02-23-01_25_22.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-restaurant-1-2026-02-23-01_30_11.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-restaurant-dashboard-2026-02-23-01_32_46.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-restaurant-hero-burger-2026-02-22-16_03_29.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-restaurant-menu-editor-2026-02-23-01_33_00.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-rider-dashboard-2026-02-23-01_33_16.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-rider-login-2026-02-23-01_28_57.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-rider-signup-2026-02-23-01_29_25.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-riders-2026-02-23-01_26_25.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-signup-2026-02-23-01_28_18.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-user-addresses-2026-02-23-01_32_29.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-user-dashboard-2026-02-23-01_31_28.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-user-favorites-2026-02-23-01_31_55.png',
+            'Nibble-ui screenshots/screencapture-localhost-5173-user-orders-2026-02-23-01_31_43.png'
           ],
-          ssLabels: ['Admin Dashboard', 'Shopping Cart', 'Product Catalog', 'Checkout Flow'],
-          domain: 'shopify-clone.app'
+          ssLabels: [
+            'Landing Update 1',
+            'NomNom Landing',
+            'Landing Update 2',
+            'About Us',
+            'Checkout Flow',
+            'Contact Page',
+            'Explore Marketplace',
+            'Explore Search',
+            'How it Works',
+            'User Login',
+            'Partner Login',
+            'Partner Signup',
+            'Partner Landing',
+            'Restaurant Menu',
+            'Restaurant Dashboard',
+            'Burger Specialty',
+            'Menu Editor',
+            'Rider Dashboard',
+            'Rider Login',
+            'Rider Signup',
+            'Rider Landing',
+            'User Signup',
+            'User Addresses',
+            'User Dashboard',
+            'User Favorites',
+            'User Orders'
+          ],
+          domain: 'nibble.app'
         },
         {
-          title: 'Task Management SaaS',
-          brief: 'Collaborative project manager with real-time updates and team workspaces',
-          description: 'Teams needed a lightweight alternative to bloated PM tools. Built a focused task manager with board views, assignments, and real-time collaboration using Socket.io — clean and fast. Includes drag-and-drop kanban boards, deadline tracking, file attachments, team chat, and workspace-level permissions with role-based access control.',
-          tech: ['Next.js', 'Express', 'MongoDB', 'Socket.io', 'Tailwind', 'Redis'],
-          outcome: 'SaaS-ready architecture with subscription-based access control. Onboarded first 3 teams within a week of launch. Real-time sync working flawlessly at scale. 99.9% uptime since deployment.',
-          preview: 'https://picsum.photos/seed/task-kanban/800/500',
+          title: 'DJ Marketplace',
+          brief: 'Platform for discovering and booking professional DJs',
+          description: 'A dedicated marketplace connecting event organizers with professional DJs. The platform allows DJs to showcase their portfolios, mixes, and availability, while organizers can browse profiles, listen to samples, and book talent directly. Features a robust search and filtering system.',
+          tech: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Express'],
+          outcome: 'Delivered a sleek, dark-themed UI that perfectly matches the nightlife aesthetic. Implemented a seamless booking flow and rich artist profiles that highlight audio and visual content effectively.',
+          preview: 'Dj_marketplace-ui screenshots/screencapture-localhost-5173-2026-02-27-21_31_36.png',
           screenshots: [
-            'https://picsum.photos/seed/task-board/800/500',
-            'https://picsum.photos/seed/task-timeline/800/500',
-            'https://picsum.photos/seed/task-settings/800/500',
-            'https://picsum.photos/seed/task-chat/800/500'
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-2026-02-27-21_31_36.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-about-2026-02-27-21_31_57.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-artist-vera-lo-2026-02-27-21_34_13.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-contact-2026-02-27-21_32_18.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-how-it-works-2026-02-27-21_32_08.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-login-2026-02-27-21_32_34.png',
+            'Dj_marketplace-ui screenshots/screencapture-localhost-5173-signup-2026-02-27-21_38_53.png'
           ],
-          ssLabels: ['Kanban Board', 'Timeline View', 'Team Settings', 'Real-time Chat'],
-          domain: 'taskflow.io'
+          ssLabels: [
+            'Platform Home',
+            'About Section',
+            'Artist Profile',
+            'Contact Us',
+            'How it Works',
+            'Login Screen',
+            'Signup Form'
+          ],
+          domain: 'djmarketplace.co'
         },
         {
-          title: 'Social Media Platform',
-          brief: 'Feed, follow system, posts, likes, comments — full social graph',
-          description: 'Built a niche community platform from the ground up — user profiles, follow/unfollow, activity feed, post interactions. Focused on performance and clean UX for organic growth. Features include image/video posts with Cloudinary CDN, infinite scroll feed, notification system, direct messaging, content moderation tools, and hashtag-based discovery.',
-          tech: ['React', 'Node.js', 'MongoDB', 'Cloudinary', 'JWT', 'Socket.io'],
-          outcome: 'Grew to 200+ active users in beta. Learned scalable feed aggregation patterns and efficient social graph queries in MongoDB. Image uploads integrated seamlessly via Cloudinary. Avg page load under 1.2s.',
-          preview: 'https://picsum.photos/seed/social-feed/800/500',
+          title: 'xManager',
+          brief: 'Professional sports and player management application',
+          description: 'A comprehensive management platform tailored for the sports industry, facilitating communication and operations between players, agents, and club boardrooms. It features role-specific hubs (Pro Hub, Agent Portal, Boardroom) to streamline contract negotiations, player tracking, and administrative tasks.',
+          tech: ['Next.js', 'React', 'Tailwind CSS', 'PostgreSQL', 'Prisma'],
+          outcome: 'Created a centralized dashboard ecosystem that replaces fragmented communication channels. The platform provides data-rich views, secure authentication, and specialized workflows for different stakeholders in the sports management process.',
+          preview: 'Fifa ui screenshot/1.png',
           screenshots: [
-            'https://picsum.photos/seed/social-profile/800/500',
-            'https://picsum.photos/seed/social-post/800/500',
-            'https://picsum.photos/seed/social-discover/800/500',
-            'https://picsum.photos/seed/social-messages/800/500'
+            'Fifa ui screenshot/1.png',
+            'Fifa ui screenshot/4.png',
+            'Fifa ui screenshot/3.png',
+            'Fifa ui screenshot/5.png',
+            'Fifa ui screenshot/Screenshot 2026-02-28 002929.png',
+            'Fifa ui screenshot/screencapture-localhost-3000-agent-2026-02-28-00_24_28.png',
+            'Fifa ui screenshot/screencapture-localhost-3000-auth-2026-02-28-00_22_29.png',
+            'Fifa ui screenshot/screencapture-localhost-3000-auth-2026-02-28-00_22_40.png',
+            'Fifa ui screenshot/screencapture-localhost-3000-boardroom-2026-02-28-00_24_14.png',
+            'Fifa ui screenshot/screencapture-localhost-3000-pro-hub-2026-02-28-00_23_20.png'
           ],
-          ssLabels: ['User Profile', 'Post Feed', 'Discover Page', 'Direct Messages'],
-          domain: 'connect.social'
-        },
-        {
-          title: 'Auth System (JWT + OTP)',
-          brief: 'Secure, production-grade authentication with multi-factor support',
-          description: 'Clients kept needing the same secure auth system. Built a reusable, production-ready auth module — JWT + refresh tokens, OTP via email/SMS, rate limiting, and account recovery. Includes password strength validation, brute-force protection, session management dashboard, audit logging, and OAuth2 social login integration.',
-          tech: ['Node.js', 'Express', 'MongoDB', 'Nodemailer', 'bcrypt', 'Twilio'],
-          outcome: 'Now used as a starter template across multiple client projects. Saved 15-20 hours per new project. Zero security incidents in production deployments. Battle-tested across 8 production apps.',
-          preview: 'https://picsum.photos/seed/auth-login/800/500',
-          screenshots: [
-            'https://picsum.photos/seed/auth-otp/800/500',
-            'https://picsum.photos/seed/auth-dashboard/800/500',
-            'https://picsum.photos/seed/auth-settings/800/500',
-            'https://picsum.photos/seed/auth-logs/800/500'
+          ssLabels: [
+            'View 1',
+            'xManager Hub',
+            'View 3',
+            'View 5',
+            'Screenshot Update',
+            'Agent Dashboard',
+            'Auth Login',
+            'Auth Register',
+            'Boardroom Access',
+            'Pro Hub'
           ],
-          ssLabels: ['OTP Verification', 'Session Dashboard', 'Security Settings', 'Audit Logs'],
-          domain: 'secure-auth.dev'
+          domain: 'xmanager.sport'
         }
       ];
 
@@ -4217,12 +4282,19 @@
         const data = projectsData[idx];
 
         header.addEventListener('mouseenter', () => {
+          if (overlay.classList.contains('genie-open') || overlay.classList.contains('genie-opening')) return;
           previewImg.src = data.preview;
           previewTitle.textContent = data.domain;
           requestAnimationFrame(() => preview.classList.add('visible'));
         });
 
         header.addEventListener('mousemove', (e) => {
+          if (overlay.classList.contains('genie-open') || overlay.classList.contains('genie-opening')) return;
+          if (!preview.classList.contains('visible')) {
+            previewImg.src = data.preview;
+            previewTitle.textContent = data.domain;
+            preview.classList.add('visible');
+          }
           const offset = 24;
           let x = e.clientX + offset;
           let y = e.clientY - 120;
@@ -4278,6 +4350,7 @@
           // Trigger genie open
           overlay.classList.remove('genie-closing', 'genie-open');
           overlay.classList.add('genie-opening');
+          overlay.style.pointerEvents = 'auto';
           document.body.style.overflow = 'hidden';
 
           overlay.addEventListener('animationend', function onOpen() {
@@ -4293,15 +4366,18 @@
         if (carouselInterval) clearInterval(carouselInterval);
         currentSlide = 0;
 
+        const carouselScreenshots = data.screenshots.slice(0, 4);
+        const carouselLabels = data.ssLabels.slice(0, 4);
+
         // Build slides
-        carouselSlidesEl.innerHTML = data.screenshots.map((url, i) =>
+        carouselSlidesEl.innerHTML = carouselScreenshots.map((url, i) =>
           `<div class="carousel-slide${i === 0 ? ' active' : ''}">
-            <img src="${url}" alt="${data.ssLabels[i]}" loading="lazy">
+            <img src="${url}" alt="${carouselLabels[i]}" loading="lazy">
           </div>`
         ).join('');
 
         // Build dots
-        carouselDotsEl.innerHTML = data.screenshots.map((_, i) =>
+        carouselDotsEl.innerHTML = carouselScreenshots.map((_, i) =>
           `<span class="carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}"></span>`
         ).join('');
 
@@ -4375,12 +4451,15 @@
         galleryOverlay.classList.remove('visible');
         overlay.classList.remove('genie-opening', 'genie-open');
         overlay.classList.add('genie-closing');
+        overlay.style.pointerEvents = 'none'; // Prevent invisible overlay blocking
 
-        overlay.addEventListener('animationend', function onClose() {
+        overlay.addEventListener('animationend', function onClose(e) {
+          if (e && e.target !== overlay) return;
           overlay.removeEventListener('animationend', onClose);
           overlay.classList.remove('genie-closing');
           overlay.style.visibility = 'hidden';
           overlay.style.opacity = '0';
+          overlay.style.pointerEvents = '';
           document.body.style.overflow = '';
         });
       }
